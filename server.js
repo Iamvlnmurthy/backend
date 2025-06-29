@@ -20,7 +20,7 @@ mongoose.connect(mongoURI)
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173' // Allow requests from your React frontend (default Vite port)
+    origin: 'https://frontend-git-master-vlnmurthys-projects.vercel.app' // Allow requests from your React frontend (default Vite port)
     // In a production environment, replace with your frontend's actual domain
 }));
 app.use(bodyParser.json()); // To parse JSON request bodies
