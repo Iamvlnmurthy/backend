@@ -117,6 +117,8 @@ const myLinkSchema = new mongoose.Schema({
     name: { type: String, required: true },
     url: { type: String, required: true },
     description: { type: String },
+    username: { type: String }, // Optional username
+    password: { type: String }, // Optional password
     timestamp: { type: Date, default: Date.now }
 }, {
     timestamps: true
