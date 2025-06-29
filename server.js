@@ -40,7 +40,7 @@ const contactSchema = new mongoose.Schema({
     district: String,
     location: String,
     nativeLanguage: String,
-    purpose: { type: String, enum: ['general', 'distributor', 'influencer', 'political', 'celebrity', 'serviceProvider', 'customer', 'teaStall'], default: 'general' },
+    purpose: { type: String, enum: ['general', 'distributor', 'influencer', 'political', 'celebrity', 'serviceProvider', 'customer', 'teaStall', 'shops'], default: 'general' },
     remarks: String,
     notes: String,
     x_twitter: String,
@@ -72,6 +72,13 @@ const contactSchema = new mongoose.Schema({
     teaStallMandal: String,
     teaStallTeaPowderPrice: Number,
     teaStallOtherSellingItems: String,
+    shopName: { type: String, required: function() { return this.purpose === 'shops'; } },
+    shopOwnerName: { type: String, required: function() { return this.purpose === 'shops'; } },
+    shopContactNumber: { type: String, required: function() { return this.purpose === 'shops'; } },
+    shopCategory: { type: String, required: function() { return this.purpose === 'shops'; } },
+    shopAddress: { type: String, required: function() { return this.purpose === 'shops'; } },
+    shopVillage: { type: String },
+    shopMandal: { type: String },
     timestamp: { type: Date, default: Date.now }
 }, {
     timestamps: true // Adds createdAt and updatedAt timestamps automatically
