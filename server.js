@@ -111,6 +111,18 @@ const backupSchema = new mongoose.Schema({
 
 const Backup = mongoose.model('Backup', backupSchema);
 
+// MyLinks Schema
+const myLinkSchema = new mongoose.Schema({
+    id: { type: String, unique: true, required: true }, // Custom ID
+    name: { type: String, required: true },
+    url: { type: String, required: true },
+    description: { type: String },
+    timestamp: { type: Date, default: Date.now }
+}, {
+    timestamps: true
+});
+
+const MyLink = mongoose.model('MyLink', myLinkSchema);
 
 // --- API Routes ---
 
@@ -233,6 +245,54 @@ app.post('/api/backups', async (req, res) => {
         res.status(201).json(newBackup);
     } catch (err) {
         res.status(400).json({ message: err.message });
+    }
+});
+
+// MyLinks API
+app.get('/api/mylinks', async (req, res) => {
+    try {
+        const links = await MyLink.find().sort({ name: 1 });
+        res.json(links);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+app.post('/api/mylinks', async (req, res) => {
+    try {
+        const newLinkData = req.body;
+        newLinkData.id = newLinkData.id || `link_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+        const newLink = new MyLink(newLinkData);
+        await newLink.save();
+        res.status(201).json(newLink);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
+app.put('/api/mylinks/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedLink = await MyLink.findOneAndUpdate({ id: id }, req.body, { new: true });
+        if (!updatedLink) {
+            return res.status(404).json({ message: 'Link not found' });
+        }
+        res.json(updatedLink);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
+app.delete('/api/mylinks/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await MyLink.deleteOne({ id: id });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'Link not found' });
+        }
+        res.json({ message: 'Link deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 });
 
